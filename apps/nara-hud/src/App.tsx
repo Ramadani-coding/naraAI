@@ -204,7 +204,7 @@ export function App() {
         void refreshStatus();
       }
     },
-    [appendMessage, appendTimeline, refreshStatus, speakResponses, speech]
+    [appendMessage, appendTimeline, refreshStatus, speakResponses, speech.speak]
   );
 
   useEffect(() => {
@@ -216,20 +216,45 @@ export function App() {
   useEffect(() => {
     let reconnect: number | null = null;
     let cleanup: () => void = () => undefined;
+    let disposed = false;
 
     const connect = () => {
+      if (disposed) {
+        return;
+      }
+
       cleanup = connectEvents(
         handleEvent,
-        () => setConnected(true),
         () => {
+          if (disposed) {
+            return;
+          }
+
+          if (reconnect) {
+            window.clearTimeout(reconnect);
+            reconnect = null;
+          }
+          setConnected(true);
+        },
+        () => {
+          if (disposed) {
+            return;
+          }
+
           setConnected(false);
-          reconnect = window.setTimeout(connect, 2500);
+          if (!reconnect) {
+            reconnect = window.setTimeout(() => {
+              reconnect = null;
+              connect();
+            }, 2500);
+          }
         }
       );
     };
 
     connect();
     return () => {
+      disposed = true;
       cleanup();
       if (reconnect) window.clearTimeout(reconnect);
     };

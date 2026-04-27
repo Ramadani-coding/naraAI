@@ -4,6 +4,13 @@ All notable changes to NARA will be documented in this file.
 
 The project follows semantic versioning.
 
+## [0.1.2] - 2026-04-27
+
+### Fixed
+
+- Stabilize HUD daemon connection badge by preventing stale WebSocket close events from overriding active connections.
+- Avoid unnecessary WebSocket reconnects caused by unstable React effect dependencies in development mode.
+
 ## [0.1.1] - 2026-04-27
 
 ### Fixed

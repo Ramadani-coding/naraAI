@@ -87,11 +87,31 @@ export function connectEvents(
   onClose: () => void
 ) {
   const socket = new WebSocket(`${WS_BASE}/events`);
+  let closed = false;
+  let manuallyClosed = false;
 
-  socket.addEventListener("open", onOpen);
-  socket.addEventListener("close", onClose);
-  socket.addEventListener("error", onClose);
-  socket.addEventListener("message", (message) => {
+  const handleOpen = () => {
+    if (!manuallyClosed) {
+      onOpen();
+    }
+  };
+
+  const handleClose = () => {
+    if (closed || manuallyClosed) {
+      return;
+    }
+
+    closed = true;
+    onClose();
+  };
+
+  const handleError = () => {
+    if (!manuallyClosed && socket.readyState !== WebSocket.CLOSED) {
+      socket.close();
+    }
+  };
+
+  const handleMessage = (message: MessageEvent) => {
     try {
       onEvent(JSON.parse(message.data as string) as EventEnvelope);
     } catch {
@@ -102,7 +122,22 @@ export function connectEvents(
         created_at: new Date().toISOString()
       });
     }
-  });
+  };
 
-  return () => socket.close();
+  socket.addEventListener("open", handleOpen);
+  socket.addEventListener("close", handleClose);
+  socket.addEventListener("error", handleError);
+  socket.addEventListener("message", handleMessage);
+
+  return () => {
+    manuallyClosed = true;
+    socket.removeEventListener("open", handleOpen);
+    socket.removeEventListener("close", handleClose);
+    socket.removeEventListener("error", handleError);
+    socket.removeEventListener("message", handleMessage);
+
+    if (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING) {
+      socket.close();
+    }
+  };
 }

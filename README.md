@@ -3,7 +3,7 @@
 NARA is a Windows-first AI desktop assistant prototype based on `PRD.txt`.
 It combines a futuristic HUD, a local daemon, Codex CLI integration, safe command approvals, workspace awareness, git review helpers, local event logs, and push-to-talk voice UX.
 
-Current version: `0.1.1`
+Current version: `0.1.2`
 
 ## What Is Included
 

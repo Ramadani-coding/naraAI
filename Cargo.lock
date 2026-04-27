@@ -597,7 +597,7 @@ dependencies = [
 
 [[package]]
 name = "nara-cli"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "tokio",
@@ -605,7 +605,7 @@ dependencies = [
 
 [[package]]
 name = "nara-codex"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "serde",
@@ -614,11 +614,11 @@ dependencies = [
 
 [[package]]
 name = "nara-core"
-version = "0.1.1"
+version = "0.1.2"
 
 [[package]]
 name = "nara-daemon"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "axum",
@@ -640,7 +640,7 @@ dependencies = [
 
 [[package]]
 name = "nara-policy"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "nara-protocol",
@@ -650,7 +650,7 @@ dependencies = [
 
 [[package]]
 name = "nara-protocol"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "chrono",
  "serde",
@@ -660,7 +660,7 @@ dependencies = [
 
 [[package]]
 name = "nara-store"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "chrono",
@@ -675,7 +675,7 @@ dependencies = [
 
 [[package]]
 name = "nara-tools"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "chrono",
@@ -687,14 +687,14 @@ dependencies = [
 
 [[package]]
 name = "nara-voice"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "nara-protocol",
 ]
 
 [[package]]
 name = "nara-windows"
-version = "0.1.1"
+version = "0.1.2"
 
 [[package]]
 name = "nu-ansi-term"
