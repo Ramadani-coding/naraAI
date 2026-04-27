@@ -32,6 +32,7 @@ import {
   getGitDiff,
   getGitStatus,
   getStatus,
+  openLogsTerminal,
   requestCommand,
   sendPrompt,
   setWorkspace,
@@ -68,6 +69,7 @@ function eventLabel(type: string) {
     "codex.completed": "Codex completed",
     "codex.failed": "Codex failed",
     "codex.error": "Codex error",
+    "codex.timeout": "Codex timeout",
     "approval.requested": "Approval requested",
     "approval.approved": "Approval approved",
     "approval.rejected": "Approval rejected",
@@ -76,6 +78,7 @@ function eventLabel(type: string) {
     "command.error": "Command error",
     "git.status": "Git status",
     "git.diff": "Git diff",
+    "diagnostics.terminal_opened": "Diagnostics terminal opened",
     "voice.recording": "Voice recording",
     "voice.stopped": "Voice stopped"
   };
@@ -87,6 +90,7 @@ function eventDetail(event: EventEnvelope) {
   if (typeof data?.message === "string") return data.message;
   if (typeof data?.command === "string") return data.command;
   if (typeof data?.stdout === "string") return data.stdout.slice(0, 120);
+  if (typeof data?.stderr === "string") return data.stderr.slice(0, 120);
   if (typeof data?.error === "string") return data.error;
   if (typeof data?.path === "string") return data.path;
   return "";
@@ -173,12 +177,21 @@ export function App() {
         setBusy(true);
       }
 
-      if (event.type === "codex.completed" || event.type === "codex.failed") {
-        const data = event.data as { stdout?: string; stderr?: string; exit_code?: number | null };
+      if (event.type === "codex.completed" || event.type === "codex.failed" || event.type === "codex.timeout") {
+        const data = event.data as {
+          stdout?: string;
+          stderr?: string;
+          exit_code?: number | null;
+          elapsed_seconds?: number;
+        };
         const content = [data.stdout, data.stderr].filter(Boolean).join("\n").trim();
+        const fallback =
+          event.type === "codex.timeout"
+            ? `Codex timeout setelah ${data.elapsed_seconds ?? 60} detik. Coba prompt yang lebih kecil atau buka terminal log.`
+            : `Codex selesai dengan exit code ${data.exit_code ?? "unknown"}.`;
         appendMessage({
           role: event.type === "codex.completed" ? "assistant" : "system",
-          content: content || `Codex selesai dengan exit code ${data.exit_code ?? "unknown"}.`
+          content: content || fallback
         });
         if (event.type === "codex.completed" && speakResponses) {
           speech.speak(content || "Codex selesai.");
@@ -241,7 +254,6 @@ export function App() {
             return;
           }
 
-          setConnected(false);
           if (!reconnect) {
             reconnect = window.setTimeout(() => {
               reconnect = null;
@@ -378,6 +390,21 @@ export function App() {
     if (text) await navigator.clipboard.writeText(text);
   };
 
+  const openDiagnosticsTerminal = async () => {
+    try {
+      await openLogsTerminal();
+      appendMessage({
+        role: "system",
+        content: "PowerShell diagnostics terminal dibuka untuk live log NARA."
+      });
+    } catch (error) {
+      appendMessage({
+        role: "system",
+        content: error instanceof Error ? error.message : "Gagal membuka diagnostics terminal."
+      });
+    }
+  };
+
   const statusTone = useMemo(() => {
     if (!connected) return "danger";
     if (!codexReady) return "warning";
@@ -444,6 +471,15 @@ export function App() {
                 <dd>{approvals.length || status?.pending_approvals || 0} approval</dd>
               </div>
             </dl>
+            <button
+              className="icon-text-button full-width-button"
+              disabled={!connected}
+              onClick={openDiagnosticsTerminal}
+              type="button"
+            >
+              <Terminal size={16} />
+              Open Logs Terminal
+            </button>
           </section>
 
           <section className="voice-block">

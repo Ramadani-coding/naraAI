@@ -81,6 +81,12 @@ export function stopVoice() {
   return request<{ status: string; transcript: string }>("/api/voice/stop", { method: "POST" });
 }
 
+export function openLogsTerminal() {
+  return request<{ status: string; paths: string[] }>("/api/diagnostics/open-terminal", {
+    method: "POST"
+  });
+}
+
 export function connectEvents(
   onEvent: (event: EventEnvelope) => void,
   onOpen: () => void,
@@ -106,7 +112,7 @@ export function connectEvents(
   };
 
   const handleError = () => {
-    if (!manuallyClosed && socket.readyState !== WebSocket.CLOSED) {
+    if (!manuallyClosed && socket.readyState === WebSocket.OPEN) {
       socket.close();
     }
   };
@@ -136,8 +142,20 @@ export function connectEvents(
     socket.removeEventListener("error", handleError);
     socket.removeEventListener("message", handleMessage);
 
-    if (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING) {
-      socket.close();
+    if (socket.readyState === WebSocket.OPEN) {
+      socket.close(1000, "NARA HUD reconnect cleanup");
+    }
+
+    if (socket.readyState === WebSocket.CONNECTING) {
+      socket.addEventListener(
+        "open",
+        () => {
+          if (socket.readyState === WebSocket.OPEN) {
+            socket.close(1000, "NARA HUD stale connection cleanup");
+          }
+        },
+        { once: true }
+      );
     }
   };
 }

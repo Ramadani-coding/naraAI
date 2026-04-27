@@ -12,6 +12,7 @@ port = 44731
 enabled = true
 executable = "codex.cmd"
 default_mode = "cli"
+timeout_seconds = 60
 
 [voice]
 enabled = true

@@ -35,6 +35,8 @@ pub struct CodexSection {
     pub enabled: bool,
     pub executable: String,
     pub default_mode: String,
+    #[serde(default = "default_codex_timeout_seconds")]
+    pub timeout_seconds: u64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -78,6 +80,7 @@ impl Default for AppConfig {
                 enabled: true,
                 executable: default_codex_executable().into(),
                 default_mode: "cli".into(),
+                timeout_seconds: default_codex_timeout_seconds(),
             },
             voice: VoiceSection {
                 enabled: true,
@@ -107,6 +110,10 @@ fn default_codex_executable() -> &'static str {
     } else {
         "codex"
     }
+}
+
+fn default_codex_timeout_seconds() -> u64 {
+    60
 }
 
 pub fn app_data_dir() -> PathBuf {

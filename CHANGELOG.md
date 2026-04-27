@@ -4,6 +4,19 @@ All notable changes to NARA will be documented in this file.
 
 The project follows semantic versioning.
 
+## [0.1.3] - 2026-04-27
+
+### Fixed
+
+- Avoid closing connecting HUD WebSockets during dev cleanup to reduce browser console noise.
+- Add a 60-second Codex timeout so prompts cannot leave the HUD stuck in `thinking`.
+- Surface `codex.timeout` in the HUD and clear the busy state.
+
+### Added
+
+- Add `POST /api/diagnostics/open-terminal` to open a PowerShell live log terminal.
+- Add HUD `Open Logs Terminal` action for mentoring/debugging daemon, Codex, and event-log issues.
+
 ## [0.1.2] - 2026-04-27
 
 ### Fixed

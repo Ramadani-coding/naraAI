@@ -16,7 +16,7 @@ use nara_protocol::{
     PromptAcceptedResponse, PromptRequest, RiskLevel, RunCommandRequest, SetWorkspaceRequest,
     StatusResponse, ToolRunStatus, VoiceState, VoiceStatus, WorkspaceInfo,
 };
-use nara_store::{load_or_create_config, AppConfig, EventLogger};
+use nara_store::{app_data_dir, load_or_create_config, AppConfig, EventLogger};
 use nara_tools::ToolRuntime;
 use serde::Serialize;
 use serde_json::json;
@@ -53,7 +53,10 @@ async fn main() -> anyhow::Result<()> {
     let config = load_or_create_config().await?;
     let logger = EventLogger::new(config.security.redact_secrets).await?;
     let (event_tx, _) = broadcast::channel(256);
-    let codex = CodexBridge::new(config.codex.executable.clone());
+    let codex = CodexBridge::new(
+        config.codex.executable.clone(),
+        config.codex.timeout_seconds,
+    );
 
     let state = AppState {
         config: config.clone(),
@@ -81,6 +84,10 @@ async fn main() -> anyhow::Result<()> {
         .route("/api/git/diff", get(git_diff))
         .route("/api/voice/start", post(voice_start))
         .route("/api/voice/stop", post(voice_stop))
+        .route(
+            "/api/diagnostics/open-terminal",
+            post(open_diagnostics_terminal),
+        )
         .route("/events", get(events_ws))
         .layer(CorsLayer::permissive())
         .layer(TraceLayer::new_for_http())
@@ -171,6 +178,24 @@ async fn prompt(
         .await;
 
         match state_for_task.codex.run_prompt(&workspace, &message).await {
+            Ok(result) if result.timed_out => {
+                emit(
+                    &state_for_task,
+                    "codex.timeout",
+                    json!({
+                        "session_id": session_id_for_task,
+                        "stdout": result.stdout,
+                        "stderr": result.stderr,
+                        "exit_code": result.exit_code,
+                        "elapsed_ms": result.elapsed_ms,
+                        "elapsed_seconds": result.elapsed_ms / 1000,
+                        "command": result.command,
+                        "workspace": result.workspace,
+                        "executable": result.executable
+                    }),
+                )
+                .await;
+            }
             Ok(result) if result.exit_code == Some(0) => {
                 emit(
                     &state_for_task,
@@ -179,7 +204,11 @@ async fn prompt(
                         "session_id": session_id_for_task,
                         "stdout": result.stdout,
                         "stderr": result.stderr,
-                        "exit_code": result.exit_code
+                        "exit_code": result.exit_code,
+                        "elapsed_ms": result.elapsed_ms,
+                        "command": result.command,
+                        "workspace": result.workspace,
+                        "executable": result.executable
                     }),
                 )
                 .await;
@@ -192,7 +221,11 @@ async fn prompt(
                         "session_id": session_id_for_task,
                         "stdout": result.stdout,
                         "stderr": result.stderr,
-                        "exit_code": result.exit_code
+                        "exit_code": result.exit_code,
+                        "elapsed_ms": result.elapsed_ms,
+                        "command": result.command,
+                        "workspace": result.workspace,
+                        "executable": result.executable
                     }),
                 )
                 .await;
@@ -350,6 +383,80 @@ async fn voice_start(State(state): State<AppState>) -> Json<serde_json::Value> {
 async fn voice_stop(State(state): State<AppState>) -> Json<serde_json::Value> {
     emit(&state, "voice.stopped", json!({})).await;
     Json(json!({ "status": "stopped", "transcript": "" }))
+}
+
+async fn open_diagnostics_terminal(
+    State(state): State<AppState>,
+) -> Result<Json<serde_json::Value>, ApiError> {
+    if !cfg!(windows) {
+        return Err(ApiError::bad_request(
+            "Diagnostics terminal hanya tersedia di Windows untuk MVP ini.",
+        ));
+    }
+
+    let log_path = app_data_dir().join("logs").join(format!(
+        "events-{}.jsonl",
+        chrono::Utc::now().format("%Y-%m-%d")
+    ));
+    if let Some(parent) = log_path.parent() {
+        tokio::fs::create_dir_all(parent)
+            .await
+            .map_err(|err| ApiError::internal(err.into()))?;
+    }
+    if !log_path.exists() {
+        tokio::fs::write(&log_path, "")
+            .await
+            .map_err(|err| ApiError::internal(err.into()))?;
+    }
+
+    let mut paths = vec![log_path.clone()];
+    let dev_log_dir = std::env::current_dir()
+        .map_err(|err| ApiError::internal(err.into()))?
+        .join(".nara-dev");
+    for file_name in ["daemon.out.log", "daemon.err.log"] {
+        let path = dev_log_dir.join(file_name);
+        if path.exists() {
+            paths.push(path);
+        }
+    }
+
+    let escaped_paths = paths
+        .iter()
+        .map(|path| format!("'{}'", path.display().to_string().replace('\'', "''")))
+        .collect::<Vec<_>>()
+        .join(",");
+    let script = format!(
+        "$Host.UI.RawUI.WindowTitle = 'NARA Diagnostics'; \
+         $paths = @({escaped_paths}); \
+         Write-Host 'NARA diagnostics live logs' -ForegroundColor Cyan; \
+         $paths | ForEach-Object {{ Write-Host (' - ' + $_) -ForegroundColor DarkGray }}; \
+         Write-Host ''; \
+         Get-Content -LiteralPath $paths -Tail 100 -Wait"
+    );
+
+    tokio::process::Command::new("powershell.exe")
+        .arg("-NoExit")
+        .arg("-ExecutionPolicy")
+        .arg("Bypass")
+        .arg("-Command")
+        .arg(script)
+        .spawn()
+        .map_err(|err| ApiError::internal(err.into()))?;
+
+    emit(
+        &state,
+        "diagnostics.terminal_opened",
+        json!({ "paths": paths.iter().map(|path| path.display().to_string()).collect::<Vec<_>>() }),
+    )
+    .await;
+
+    Ok(Json(json!({
+        "status": "opened",
+        "paths": paths
+            .iter()
+            .map(|path| path.display().to_string())
+            .collect::<Vec<_>>()
+    })))
 }
 
 async fn events_ws(State(state): State<AppState>, ws: WebSocketUpgrade) -> Response {

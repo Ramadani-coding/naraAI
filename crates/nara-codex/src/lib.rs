@@ -2,10 +2,12 @@ use anyhow::Context;
 use serde::{Deserialize, Serialize};
 use std::path::Path;
 use tokio::process::Command;
+use tokio::time::{timeout, Duration, Instant};
 
 #[derive(Debug, Clone)]
 pub struct CodexBridge {
     executable: String,
+    timeout_seconds: u64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -20,12 +22,18 @@ pub struct CodexRunResult {
     pub stdout: String,
     pub stderr: String,
     pub exit_code: Option<i32>,
+    pub timed_out: bool,
+    pub elapsed_ms: u128,
+    pub executable: String,
+    pub command: String,
+    pub workspace: String,
 }
 
 impl CodexBridge {
-    pub fn new(executable: impl Into<String>) -> Self {
+    pub fn new(executable: impl Into<String>, timeout_seconds: u64) -> Self {
         Self {
             executable: executable.into(),
+            timeout_seconds,
         }
     }
 
@@ -56,7 +64,15 @@ impl CodexBridge {
         prompt: &str,
     ) -> anyhow::Result<CodexRunResult> {
         let executable = self.resolve_executable().await;
-        let output = Command::new(&executable)
+        let command_line = format!(
+            "{} exec --skip-git-repo-check --sandbox read-only --color never --cd \"{}\" <prompt>",
+            executable,
+            workspace.display()
+        );
+        let started_at = Instant::now();
+        let mut command = Command::new(&executable);
+        command
+            .kill_on_drop(true)
             .arg("exec")
             .arg("--skip-git-repo-check")
             .arg("--sandbox")
@@ -65,15 +81,37 @@ impl CodexBridge {
             .arg("never")
             .arg("--cd")
             .arg(workspace)
-            .arg(prompt)
-            .output()
-            .await
-            .with_context(|| format!("failed to launch {executable}"))?;
+            .arg(prompt);
+
+        let output =
+            match timeout(Duration::from_secs(self.timeout_seconds), command.output()).await {
+                Ok(output) => output.with_context(|| format!("failed to launch {executable}"))?,
+                Err(_) => {
+                    return Ok(CodexRunResult {
+                        stdout: String::new(),
+                        stderr: format!(
+                            "Codex did not finish within {} seconds.",
+                            self.timeout_seconds
+                        ),
+                        exit_code: None,
+                        timed_out: true,
+                        elapsed_ms: started_at.elapsed().as_millis(),
+                        executable,
+                        command: command_line,
+                        workspace: workspace.display().to_string(),
+                    });
+                }
+            };
 
         Ok(CodexRunResult {
             stdout: String::from_utf8_lossy(&output.stdout).to_string(),
             stderr: String::from_utf8_lossy(&output.stderr).to_string(),
             exit_code: output.status.code(),
+            timed_out: false,
+            elapsed_ms: started_at.elapsed().as_millis(),
+            executable,
+            command: command_line,
+            workspace: workspace.display().to_string(),
         })
     }
 
