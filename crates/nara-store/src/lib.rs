@@ -76,7 +76,7 @@ impl Default for AppConfig {
             },
             codex: CodexSection {
                 enabled: true,
-                executable: "codex".into(),
+                executable: default_codex_executable().into(),
                 default_mode: "cli".into(),
             },
             voice: VoiceSection {
@@ -98,6 +98,14 @@ impl Default for AppConfig {
                 retention_days: 14,
             },
         }
+    }
+}
+
+fn default_codex_executable() -> &'static str {
+    if cfg!(windows) {
+        "codex.cmd"
+    } else {
+        "codex"
     }
 }
 

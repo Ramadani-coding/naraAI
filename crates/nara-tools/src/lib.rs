@@ -47,7 +47,13 @@ impl ToolRuntime {
     }
 
     pub async fn git_status(&self) -> anyhow::Result<ToolOutput> {
-        run_process("git_status", "git", vec!["status".into(), "--short".into()], &self.workspace).await
+        run_process(
+            "git_status",
+            "git",
+            vec!["status".into(), "--short".into()],
+            &self.workspace,
+        )
+        .await
     }
 
     pub async fn git_diff(&self) -> anyhow::Result<ToolOutput> {
@@ -61,7 +67,13 @@ impl ToolRuntime {
     }
 
     pub async fn git_diff_full(&self) -> anyhow::Result<ToolOutput> {
-        run_process("git_diff", "git", vec!["diff".into(), "--".into(), ".".into()], &self.workspace).await
+        run_process(
+            "git_diff",
+            "git",
+            vec!["diff".into(), "--".into(), ".".into()],
+            &self.workspace,
+        )
+        .await
     }
 
     pub async fn open_vscode(&self) -> anyhow::Result<ToolOutput> {
@@ -84,7 +96,9 @@ impl ToolRuntime {
             )
             .await
         } else {
-            Err(anyhow!("open_file_explorer is only supported on Windows in this MVP"))
+            Err(anyhow!(
+                "open_file_explorer is only supported on Windows in this MVP"
+            ))
         }
     }
 
@@ -102,7 +116,9 @@ impl ToolRuntime {
             )
             .await
         } else {
-            Err(anyhow!("open_terminal is only supported on Windows in this MVP"))
+            Err(anyhow!(
+                "open_terminal is only supported on Windows in this MVP"
+            ))
         }
     }
 }
@@ -141,7 +157,12 @@ async fn run_shell(tool_name: &str, command: &str, cwd: &Path) -> anyhow::Result
     })
 }
 
-async fn run_process(tool_name: &str, program: &str, args: Vec<String>, cwd: &Path) -> anyhow::Result<ToolOutput> {
+async fn run_process(
+    tool_name: &str,
+    program: &str,
+    args: Vec<String>,
+    cwd: &Path,
+) -> anyhow::Result<ToolOutput> {
     let started_at = Utc::now().to_rfc3339();
     let output = Command::new(program)
         .args(args)

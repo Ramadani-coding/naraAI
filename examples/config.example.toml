@@ -10,7 +10,7 @@ port = 44731
 
 [codex]
 enabled = true
-executable = "codex"
+executable = "codex.cmd"
 default_mode = "cli"
 
 [voice]

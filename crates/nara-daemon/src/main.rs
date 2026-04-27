@@ -64,7 +64,12 @@ async fn main() -> anyhow::Result<()> {
         codex,
     };
 
-    emit(&state, "daemon.started", json!({ "port": config.daemon.port })).await;
+    emit(
+        &state,
+        "daemon.started",
+        json!({ "port": config.daemon.port }),
+    )
+    .await;
 
     let app = Router::new()
         .route("/api/status", get(status))
@@ -130,7 +135,9 @@ async fn set_workspace(
 
     *state.workspace.write().await = Some(path.clone());
     let workspace = WorkspaceInfo {
-        name: path.file_name().map(|name| name.to_string_lossy().to_string()),
+        name: path
+            .file_name()
+            .map(|name| name.to_string_lossy().to_string()),
         path: Some(path.display().to_string()),
     };
     emit(&state, "workspace.selected", &workspace).await;

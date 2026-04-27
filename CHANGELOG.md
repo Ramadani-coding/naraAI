@@ -4,6 +4,14 @@ All notable changes to NARA will be documented in this file.
 
 The project follows semantic versioning.
 
+## [0.1.1] - 2026-04-27
+
+### Fixed
+
+- Detect Codex CLI correctly on Windows by falling back to `codex.cmd` and `codex.exe`.
+- Commit Rust workspace lockfile for reproducible daemon builds.
+- Format Rust workspace after the first successful daemon compile.
+
 ## [0.1.0] - 2026-04-27
 
 ### Added

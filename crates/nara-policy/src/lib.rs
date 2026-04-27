@@ -55,7 +55,9 @@ pub fn assess_tool_request(intent: &ToolIntent, context: &PolicyContext) -> Poli
     }
 
     if let Some(path) = &intent.path {
-        if !context.allow_outside_workspace && is_outside_workspace(path, context.workspace.as_deref()) {
+        if !context.allow_outside_workspace
+            && is_outside_workspace(path, context.workspace.as_deref())
+        {
             return PolicyDecision::ask("Akses path di luar workspace butuh approval eksplisit.");
         }
     }
@@ -78,12 +80,30 @@ pub fn assess_tool_request(intent: &ToolIntent, context: &PolicyContext) -> Poli
 fn blocked_command_reason(command: &str) -> Option<String> {
     let checks = [
         (r"(?i)\bformat\b", "Command format disk diblokir."),
-        (r"(?i)\breg\s+(add|delete|import|save|restore)\b", "Edit registry diblokir."),
-        (r"(?i)\b(system32|c:\\windows|windows\\system32)\b", "Akses destructive ke folder Windows diblokir."),
-        (r"(?i)\bcredential\s+manager\b", "Akses credential Windows diblokir."),
-        (r"(?i)\b(disable.*defender|DisableRealtimeMonitoring|Set-MpPreference)\b", "Menonaktifkan security tools diblokir."),
-        (r"(?i)\b(cipher\s+/w|bcdedit|diskpart|takeown|icacls)\b", "Command administratif berisiko tinggi diblokir."),
-        (r"(?i)(rm\s+-rf\s+/|del\s+/s\s+/q\s+c:\\)", "Command delete massal diblokir."),
+        (
+            r"(?i)\breg\s+(add|delete|import|save|restore)\b",
+            "Edit registry diblokir.",
+        ),
+        (
+            r"(?i)\b(system32|c:\\windows|windows\\system32)\b",
+            "Akses destructive ke folder Windows diblokir.",
+        ),
+        (
+            r"(?i)\bcredential\s+manager\b",
+            "Akses credential Windows diblokir.",
+        ),
+        (
+            r"(?i)\b(disable.*defender|DisableRealtimeMonitoring|Set-MpPreference)\b",
+            "Menonaktifkan security tools diblokir.",
+        ),
+        (
+            r"(?i)\b(cipher\s+/w|bcdedit|diskpart|takeown|icacls)\b",
+            "Command administratif berisiko tinggi diblokir.",
+        ),
+        (
+            r"(?i)(rm\s+-rf\s+/|del\s+/s\s+/q\s+c:\\)",
+            "Command delete massal diblokir.",
+        ),
     ];
 
     checks.iter().find_map(|(pattern, reason)| {
