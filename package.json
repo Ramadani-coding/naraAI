@@ -1,0 +1,19 @@
+{
+  "name": "nara",
+  "version": "0.1.0",
+  "private": true,
+  "description": "NARA desktop AI assistant monorepo",
+  "workspaces": [
+    "apps/nara-hud"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:daemon\" \"npm run dev:hud\"",
+    "dev:hud": "npm --workspace apps/nara-hud run dev",
+    "dev:daemon": "cargo run -p nara-daemon",
+    "build:hud": "npm --workspace apps/nara-hud run build",
+    "check:hud": "npm --workspace apps/nara-hud run typecheck"
+  },
+  "devDependencies": {
+    "concurrently": "9.2.1"
+  }
+}

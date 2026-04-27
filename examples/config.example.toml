@@ -1,0 +1,32 @@
+[app]
+name = "NARA"
+theme = "dark"
+hud_opacity = 0.94
+always_on_top = false
+
+[daemon]
+host = "127.0.0.1"
+port = 44731
+
+[codex]
+enabled = true
+executable = "codex"
+default_mode = "cli"
+
+[voice]
+enabled = true
+input_mode = "push_to_talk"
+wake_word_enabled = false
+wake_word = "nara"
+stt_provider = "openai"
+tts_provider = "windows"
+speak_responses = true
+
+[security]
+approval_mode = "strict"
+allow_outside_workspace = false
+redact_secrets = true
+
+[logs]
+enabled = true
+retention_days = 14

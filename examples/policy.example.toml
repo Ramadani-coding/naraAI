@@ -1,0 +1,16 @@
+[safe]
+tools = ["list_dir", "read_file", "git_status", "git_diff"]
+
+[ask]
+tools = ["run_command", "write_file", "delete_file", "open_vscode", "open_file_explorer", "open_terminal"]
+
+[block]
+command_patterns = [
+  "format",
+  "reg add",
+  "reg delete",
+  "System32",
+  "C:\\Windows",
+  "Credential Manager",
+  "DisableRealtimeMonitoring"
+]

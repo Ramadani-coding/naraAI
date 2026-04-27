@@ -1,0 +1,2475 @@
+# PRD — NARA
+
+## Windows AI Desktop Assistant dengan Voice, HUD, dan OpenAI Codex
+
+---
+
+# 1. Ringkasan Produk
+
+## 1.1 Nama Produk
+
+**NARA**
+
+Kemungkinan kepanjangan nama:
+
+```text
+NARA = Neural Agentic Runtime Assistant
+```
+
+Atau versi yang lebih simpel:
+
+```text
+NARA = Natural AI Runtime Assistant
+```
+
+Untuk sekarang kita pakai:
+
+> **NARA — Neural Agentic Runtime Assistant**
+
+---
+
+## 1.2 Deskripsi Singkat
+
+**NARA** adalah aplikasi AI assistant untuk **Windows 10** yang berjalan di komputer pengguna, memiliki **HUD futuristik**, bisa menerima perintah lewat **teks dan suara**, bisa menjawab dengan **teks dan suara**, serta dapat membantu mengoperasikan komputer secara terbatas dan aman.
+
+NARA menggunakan **OpenAI Codex** sebagai otak utama untuk pekerjaan coding, project analysis, command planning, dan bantuan developer. Namun fitur suara seperti wake word, speech-to-text, dan text-to-speech akan dibangun sebagai bagian dari sistem NARA sendiri.
+
+---
+
+## 1.3 One-liner
+
+> NARA adalah asisten AI desktop untuk Windows 10 yang bisa dipanggil dengan suara, menjawab dengan suara, menampilkan HUD futuristik, dan membantu mengerjakan task coding maupun operasi komputer dengan sistem izin yang aman.
+
+---
+
+# 2. Visi Produk
+
+Visi NARA adalah menjadi **AI desktop companion** yang terasa seperti asisten pribadi di komputer.
+
+Pengguna bisa berkata:
+
+```text
+"NARA"
+```
+
+Lalu NARA aktif dan menjawab:
+
+```text
+"Ya, aku dengar."
+```
+
+Kemudian pengguna bisa memberi instruksi:
+
+```text
+"Buka project toko online-ku, cek error npm run dev, lalu jelaskan penyebabnya."
+```
+
+NARA akan:
+
+```text
+- Mendengar suara pengguna
+- Mengubah suara menjadi teks
+- Memahami instruksi
+- Mengirim task coding ke Codex
+- Meminta izin jika perlu menjalankan command
+- Menampilkan proses di HUD
+- Menjawab balik dengan suara
+```
+
+---
+
+# 3. Masalah yang Ingin Diselesaikan
+
+## 3.1 Masalah Utama
+
+Banyak AI assistant sekarang masih berbentuk chat biasa. Pengguna tetap harus:
+
+```text
+- Mengetik prompt manual
+- Copy-paste error
+- Buka terminal sendiri
+- Menjalankan command sendiri
+- Pindah-pindah antara browser, VS Code, terminal, dan file explorer
+- Membaca output error sendiri
+```
+
+NARA ingin membuat proses itu lebih natural:
+
+```text
+Pengguna bicara → NARA mendengar → NARA bekerja → NARA menjawab.
+```
+
+---
+
+## 3.2 Masalah Developer Windows
+
+Target awal NARA adalah pengguna Windows 10 yang ingin punya assistant AI lokal di desktop.
+
+Masalah yang sering muncul:
+
+```text
+- Bingung cara menjalankan project
+- Bingung membaca error terminal
+- Sering lupa command
+- Sulit memahami struktur repo
+- Ingin AI membantu coding langsung di project
+- Ingin tetap aman sebelum AI mengubah file atau menjalankan command
+```
+
+---
+
+## 3.3 Masalah Voice Assistant Umum
+
+Voice assistant biasa seperti Siri, Alexa, atau Google Assistant tidak fokus untuk coding dan project lokal.
+
+NARA berbeda karena fokus pada:
+
+```text
+- Project coding
+- Terminal command
+- File system
+- Git
+- VS Code
+- Windows app control
+- HUD desktop
+- Approval sebelum aksi berisiko
+```
+
+---
+
+# 4. Tujuan Produk
+
+## 4.1 Tujuan Utama
+
+NARA bertujuan untuk:
+
+```text
+1. Menjadi AI assistant desktop untuk Windows 10.
+2. Bisa menerima perintah lewat teks dan suara.
+3. Bisa menjawab dengan teks dan suara.
+4. Bisa dipanggil dengan nama "NARA".
+5. Memiliki HUD desktop futuristik.
+6. Menggunakan OpenAI Codex sebagai otak coding/agent.
+7. Bisa membantu membaca project, menjalankan command, dan menjelaskan error.
+8. Bisa membuka aplikasi Windows tertentu.
+9. Memiliki approval system agar AI tidak bebas menjalankan aksi berbahaya.
+10. Menyimpan log aktivitas agar semua aksi bisa diaudit.
+```
+
+---
+
+## 4.2 Tujuan MVP
+
+MVP pertama NARA harus bisa:
+
+```text
+- Berjalan di Windows 10.
+- Memiliki HUD desktop.
+- Bisa menerima input teks.
+- Bisa menerima input suara minimal lewat tombol mic atau hotkey.
+- Bisa menjawab dengan suara.
+- Bisa terhubung ke OpenAI Codex.
+- Bisa memilih folder project.
+- Bisa mengirim task ke Codex.
+- Bisa menampilkan output Codex di HUD.
+- Bisa menjalankan command dengan approval.
+- Bisa membaca git status dan git diff.
+- Bisa menyimpan session dan log.
+```
+
+---
+
+## 4.3 Target Ideal MVP
+
+MVP ideal:
+
+```text
+User menekan hotkey atau tombol mic
+        ↓
+User bicara
+        ↓
+NARA transkrip suara menjadi teks
+        ↓
+NARA kirim instruksi ke Codex atau tool runtime
+        ↓
+NARA menampilkan proses di HUD
+        ↓
+Jika perlu command, NARA minta approval
+        ↓
+Setelah selesai, NARA menjawab dengan suara
+```
+
+---
+
+# 5. Non-Goals
+
+Untuk versi awal, NARA **tidak** akan:
+
+```text
+1. Membuat model AI sendiri.
+2. Menjalankan model AI lokal seperti Ollama.
+3. Mendukung Linux/macOS.
+4. Menjadi full replacement Windows assistant.
+5. Mengontrol mouse dan keyboard secara bebas.
+6. Membaca password browser.
+7. Mengambil credential Windows.
+8. Mengedit registry Windows.
+9. Menghapus file system penting.
+10. Mengirim email/chat otomatis.
+11. Melakukan transaksi finansial.
+12. Mengoperasikan aplikasi sensitif tanpa izin.
+13. Menjadi antivirus/security scanner.
+14. Menjadi OS-level automation tanpa batas.
+```
+
+---
+
+# 6. Platform
+
+## 6.1 Platform Utama
+
+```text
+Windows 10 first
+```
+
+Target minimum:
+
+```text
+Windows 10 22H2
+```
+
+Target berikutnya:
+
+```text
+Windows 11
+```
+
+---
+
+## 6.2 Kenapa Windows 10 Dulu?
+
+Karena kamu akan develop untuk Windows 10, maka semua keputusan teknis awal harus kompatibel dengan Windows 10.
+
+Hal yang harus dipastikan:
+
+```text
+- Tauri bisa jalan di Windows 10.
+- WebView2 Runtime tersedia.
+- Microphone permission bisa digunakan.
+- Audio playback bisa berjalan.
+- PowerShell tersedia.
+- Codex CLI bisa dipanggil dari daemon.
+- Git tersedia.
+- VS Code optional.
+```
+
+---
+
+# 7. Target Pengguna
+
+## 7.1 Primary User
+
+**Developer Windows / indie hacker / pemula-intermediate programmer**
+
+Kebutuhan:
+
+```text
+- Ingin punya AI assistant di desktop.
+- Ingin memberi perintah lewat suara.
+- Ingin AI menjawab balik dengan suara.
+- Ingin bantuan coding langsung di project.
+- Ingin command dijalankan hanya setelah izin.
+- Ingin tampilan HUD yang keren dan futuristik.
+```
+
+---
+
+## 7.2 Secondary User
+
+**Power user Windows**
+
+Kebutuhan:
+
+```text
+- Membuka aplikasi dengan suara.
+- Menjalankan task sederhana.
+- Melihat status komputer/project.
+- Menggunakan AI sebagai desktop companion.
+```
+
+---
+
+## 7.3 Future User
+
+**Developer team**
+
+Kebutuhan masa depan:
+
+```text
+- Multi-agent coding.
+- Worktree per task.
+- Reviewable diffs.
+- Shared team policy.
+- Task queue.
+- Audit logs.
+```
+
+---
+
+# 8. Persona
+
+## 8.1 Persona 1 — Developer Pemula
+
+Nama: **Furqan**
+Platform: Windows 10
+Tools: VS Code, Git, Node.js, browser
+Masalah:
+
+```text
+- Sering bingung error saat npm run dev.
+- Sering copy-paste error ke ChatGPT.
+- Ingin AI langsung bantu baca project.
+- Ingin perintah bisa pakai suara.
+```
+
+Skenario:
+
+```text
+Furqan: "NARA, cek kenapa project ini error."
+NARA: "Baik, aku akan cek project aktif. Aku perlu izin untuk menjalankan npm run dev."
+Furqan: "Setujui."
+NARA: "Error ditemukan. Masalahnya ada pada dependency yang belum terinstall."
+```
+
+---
+
+## 8.2 Persona 2 — Indie Hacker
+
+Nama: **Rafi**
+Platform: Windows 10
+Tools: VS Code, GitHub, terminal
+Masalah:
+
+```text
+- Banyak task coding kecil.
+- Ingin AI bantu bikin fitur.
+- Ingin tetap bisa review perubahan.
+- Ingin HUD yang bisa memantau aktivitas AI.
+```
+
+Skenario:
+
+```text
+Rafi: "NARA, tambahkan validasi email di halaman login."
+NARA: "Baik. Aku akan meminta Codex menganalisis file login."
+NARA: "Aku menemukan file LoginForm.tsx. Perubahan akan dilakukan di file ini. Lanjutkan?"
+Rafi: "Lanjutkan."
+```
+
+---
+
+# 9. Value Proposition
+
+NARA memberikan nilai utama:
+
+```text
+- Natural interaction: bisa diperintah dengan suara.
+- Voice response: NARA bisa menjawab balik.
+- Coding-aware: terhubung dengan Codex.
+- Desktop-aware: bisa membuka app dan menjalankan command.
+- Safe by design: semua aksi berisiko perlu approval.
+- Visual: HUD futuristik untuk melihat proses kerja AI.
+- Local runtime: daemon berjalan di komputer pengguna.
+```
+
+---
+
+# 10. Core Concept
+
+NARA terdiri dari 5 bagian besar:
+
+```text
+1. HUD
+2. Voice Core
+3. NARA Daemon
+4. Codex Bridge
+5. Tool Runtime
+```
+
+Diagram sederhana:
+
+```text
++------------------------------------------------+
+|                    NARA HUD                    |
+|       Chat, voice state, approval, timeline    |
++-----------------------+------------------------+
+                        |
+                        | localhost WebSocket/API
+                        |
++-----------------------v------------------------+
+|                  NARA Daemon                   |
+|      Session, policy, event, tools, Codex      |
++----------+--------------+--------------+-------+
+           |              |              |
+           |              |              |
++----------v---+   +------v------+   +---v-------+
+| Voice Core   |   | Codex Bridge|   | Tool Core |
+| STT / TTS    |   | Codex CLI   |   | Windows   |
+| Wake Word    |   | Wrapper     |   | Tools     |
++--------------+   +-------------+   +-----------+
+```
+
+---
+
+# 11. Peran Codex di NARA
+
+## 11.1 Codex Digunakan Untuk
+
+Codex digunakan sebagai otak untuk:
+
+```text
+- Analisis codebase
+- Membaca struktur project
+- Menjelaskan error
+- Mengusulkan perubahan kode
+- Membantu menulis kode
+- Membantu debugging
+- Membantu membuat dokumentasi
+- Memberi command suggestion
+- Membantu review git diff
+```
+
+---
+
+## 11.2 Codex Tidak Digunakan Untuk
+
+Codex **bukan** komponen utama untuk:
+
+```text
+- Wake word "NARA"
+- Speech-to-text
+- Text-to-speech
+- Audio playback
+- Microphone capture
+- HUD rendering
+- Windows permission
+- Approval system
+- Tool execution langsung
+```
+
+Bagian-bagian itu dibuat oleh NARA sendiri.
+
+---
+
+## 11.3 Cara Integrasi Codex
+
+MVP menggunakan:
+
+```text
+Codex CLI sebagai subprocess
+```
+
+Alur:
+
+```text
+NARA Daemon menerima prompt
+        ↓
+NARA Daemon menjalankan Codex CLI di workspace aktif
+        ↓
+Codex menghasilkan output
+        ↓
+Output dikirim ke HUD
+        ↓
+NARA membacakan ringkasan jika voice mode aktif
+```
+
+---
+
+# 12. Voice Experience
+
+## 12.1 Target Voice Experience
+
+Idealnya:
+
+```text
+User: "NARA"
+NARA: "Ya, aku dengar."
+User: "Cek project ini dan jelaskan errornya."
+NARA: "Baik, aku akan mengecek project aktif."
+```
+
+---
+
+## 12.2 MVP Voice Experience
+
+Untuk MVP, voice dibuat bertahap.
+
+### MVP minimum
+
+```text
+- User klik tombol mic di HUD atau tekan hotkey.
+- NARA mulai mendengar.
+- User bicara.
+- NARA transkrip suara menjadi teks.
+- Teks dikirim sebagai prompt.
+- NARA menjawab dengan teks dan suara.
+```
+
+### MVP stretch goal
+
+```text
+- User bilang "NARA".
+- NARA aktif.
+- User bicara.
+- NARA menjawab dengan suara.
+```
+
+---
+
+## 12.3 Kenapa Wake Word Bisa Jadi Stretch Goal?
+
+Wake word yang selalu aktif lebih rumit karena harus:
+
+```text
+- Mendengarkan mic terus-menerus.
+- Tidak boros CPU.
+- Tidak sering salah aktif.
+- Bisa membedakan "NARA" dari kata lain.
+- Aman secara privasi.
+- Tidak mengirim audio terus-menerus ke cloud.
+```
+
+Jadi urutan paling realistis:
+
+```text
+v0.1 = Push-to-talk voice
+v0.2 = Hotkey voice
+v0.3 = Wake word "NARA"
+v0.4 = Always-listening stable mode
+```
+
+---
+
+# 13. Voice Core
+
+## 13.1 Komponen Voice Core
+
+Voice Core terdiri dari:
+
+```text
+- Microphone capture
+- Voice activity detection
+- Speech-to-text
+- Wake word detection
+- Text-to-speech
+- Audio playback
+- Voice state manager
+```
+
+---
+
+## 13.2 Voice State Machine
+
+State voice:
+
+```text
+IDLE
+LISTENING_FOR_WAKE_WORD
+WAKE_WORD_DETECTED
+RECORDING_COMMAND
+TRANSCRIBING
+THINKING
+SPEAKING
+WAITING_APPROVAL
+ERROR
+```
+
+Flow:
+
+```text
+IDLE
+  ↓
+LISTENING_FOR_WAKE_WORD
+  ↓
+WAKE_WORD_DETECTED
+  ↓
+RECORDING_COMMAND
+  ↓
+TRANSCRIBING
+  ↓
+THINKING
+  ↓
+SPEAKING
+  ↓
+IDLE
+```
+
+Untuk MVP push-to-talk:
+
+```text
+IDLE
+  ↓
+RECORDING_COMMAND
+  ↓
+TRANSCRIBING
+  ↓
+THINKING
+  ↓
+SPEAKING
+  ↓
+IDLE
+```
+
+---
+
+## 13.3 Speech-to-Text
+
+Speech-to-text adalah proses mengubah suara pengguna menjadi teks.
+
+Pilihan:
+
+```text
+Option A: OpenAI Speech-to-Text API
+Option B: Whisper lokal
+Option C: Windows Speech Recognition
+Option D: Azure Speech
+```
+
+Karena project ini tidak ingin AI lokal, rekomendasi MVP:
+
+```text
+OpenAI Speech-to-Text API
+```
+
+Kelebihan:
+
+```text
+- Kualitas transkripsi bagus.
+- Tidak butuh GPU lokal.
+- Setup lebih mudah.
+```
+
+Kekurangan:
+
+```text
+- Butuh internet.
+- Audio dikirim ke server.
+- Ada biaya API.
+```
+
+---
+
+## 13.4 Text-to-Speech
+
+Text-to-speech adalah proses mengubah jawaban NARA menjadi suara.
+
+Pilihan:
+
+```text
+Option A: Windows built-in TTS
+Option B: OpenAI Text-to-Speech API
+Option C: Azure TTS
+Option D: ElevenLabs
+```
+
+Rekomendasi MVP:
+
+```text
+Windows built-in TTS untuk versi cepat
+OpenAI TTS untuk versi suara lebih natural
+```
+
+Default MVP:
+
+```text
+Windows built-in TTS
+```
+
+Alasan:
+
+```text
+- Lebih cepat dibuat.
+- Tidak perlu biaya tambahan.
+- Bisa offline untuk playback suara.
+```
+
+---
+
+## 13.5 Wake Word
+
+Wake word target:
+
+```text
+"NARA"
+```
+
+Pilihan teknologi:
+
+```text
+Option A: Picovoice Porcupine
+Option B: OpenWakeWord
+Option C: Vosk keyword spotting
+Option D: Custom wake word detector
+```
+
+Rekomendasi:
+
+```text
+v0.1: belum pakai wake word, pakai tombol mic/hotkey
+v0.2/v0.3: tambah wake word engine
+```
+
+---
+
+# 14. HUD Experience
+
+## 14.1 Tujuan HUD
+
+HUD adalah wajah visual NARA.
+
+HUD harus menampilkan:
+
+```text
+- Status NARA
+- Apakah NARA sedang mendengar
+- Transkrip suara pengguna
+- Jawaban NARA
+- Aktivitas Codex
+- Command yang akan dijalankan
+- Approval card
+- Output terminal
+- Git diff
+- Workspace aktif
+```
+
+---
+
+## 14.2 Mode HUD
+
+MVP:
+
+```text
+- Normal desktop window
+- Dark futuristic UI
+```
+
+Setelah MVP:
+
+```text
+- Floating mini HUD
+- Always-on-top
+- Transparent overlay
+- Animated orb
+- Voice waveform
+- Task timeline
+```
+
+---
+
+## 14.3 Komponen HUD
+
+HUD terdiri dari:
+
+```text
+1. Top status bar
+2. Voice orb
+3. Chat panel
+4. Activity timeline
+5. Approval panel
+6. Command output panel
+7. Workspace selector
+8. Settings panel
+```
+
+---
+
+## 14.4 Voice Orb
+
+Voice orb menunjukkan status NARA:
+
+```text
+Idle              = orb diam
+Listening         = orb berdenyut
+Transcribing      = orb loading
+Thinking          = orb animasi proses
+Speaking          = orb waveform
+Waiting approval  = orb berubah ke warning state
+Error             = orb merah/warning
+```
+
+---
+
+## 14.5 Chat Panel
+
+Chat panel menampilkan:
+
+```text
+- User text
+- NARA response
+- Codex output
+- Markdown
+- Code block
+- Copy button
+```
+
+---
+
+## 14.6 Activity Timeline
+
+Activity timeline menampilkan langkah kerja:
+
+```text
+- Voice detected
+- Transcribing audio
+- Sending prompt to Codex
+- Reading workspace
+- Requesting command approval
+- Running command
+- Command completed
+- Generating response
+- Speaking response
+```
+
+---
+
+## 14.7 Approval Card
+
+Approval card wajib jelas.
+
+Contoh:
+
+```text
+NARA ingin menjalankan command:
+
+npm run dev
+
+Folder:
+C:\Users\User\Projects\my-app
+
+Risiko:
+Medium
+
+Alasan:
+Untuk mengecek error runtime project.
+
+[Setujui] [Tolak] [Edit Command]
+```
+
+---
+
+# 15. Use Case
+
+## UC-001 — Perintah Lewat Teks
+
+User mengetik:
+
+```text
+"Jelaskan isi project ini."
+```
+
+Expected behavior:
+
+```text
+- HUD mengirim prompt ke daemon.
+- Daemon mengirim prompt ke Codex.
+- Codex menganalisis workspace.
+- NARA menampilkan jawaban di HUD.
+- Jika voice output aktif, NARA membacakan ringkasan.
+```
+
+---
+
+## UC-002 — Perintah Lewat Suara
+
+User menekan tombol mic dan berkata:
+
+```text
+"Jelaskan isi project ini."
+```
+
+Expected behavior:
+
+```text
+- HUD/daemon merekam audio.
+- Audio dikirim ke STT.
+- STT mengubah suara menjadi teks.
+- Teks ditampilkan di HUD.
+- User bisa melihat transkrip.
+- Prompt dikirim ke Codex.
+- NARA menjawab dengan teks dan suara.
+```
+
+---
+
+## UC-003 — Wake Word “NARA”
+
+User berkata:
+
+```text
+"NARA"
+```
+
+Expected behavior:
+
+```text
+- Wake word engine mendeteksi "NARA".
+- HUD aktif.
+- NARA menjawab: "Ya, aku dengar."
+- NARA mulai merekam command berikutnya.
+```
+
+Status:
+
+```text
+Stretch goal MVP / target v0.3
+```
+
+---
+
+## UC-004 — Cek Error Project
+
+User berkata:
+
+```text
+"NARA, cek kenapa npm run dev error."
+```
+
+Expected behavior:
+
+```text
+- NARA transkrip suara.
+- NARA mengidentifikasi butuh menjalankan command.
+- Policy memberi status ASK.
+- HUD menampilkan approval.
+- User approve.
+- Daemon menjalankan npm run dev.
+- Output dikirim ke Codex.
+- Codex menjelaskan error.
+- NARA membacakan ringkasan.
+```
+
+---
+
+## UC-005 — Buka VS Code
+
+User berkata:
+
+```text
+"NARA, buka VS Code di project ini."
+```
+
+Expected behavior:
+
+```text
+- NARA mengenali intent open app.
+- Tool runtime menjalankan VS Code.
+- Jika path workspace aktif ada, VS Code dibuka di folder tersebut.
+- NARA menjawab: "VS Code sudah aku buka."
+```
+
+---
+
+## UC-006 — Review Git Diff
+
+User berkata:
+
+```text
+"NARA, cek perubahan terakhir di project ini."
+```
+
+Expected behavior:
+
+```text
+- NARA menjalankan git status dan git diff.
+- Codex menjelaskan perubahan.
+- HUD menampilkan diff.
+- NARA membacakan ringkasan.
+```
+
+---
+
+## UC-007 — Edit File dengan Approval
+
+User berkata:
+
+```text
+"NARA, tambahkan validasi email di form login."
+```
+
+Expected behavior:
+
+```text
+- Codex menganalisis file terkait.
+- Codex membuat perubahan.
+- NARA menampilkan diff.
+- User review.
+- User bisa accept atau revert.
+- NARA membacakan ringkasan perubahan.
+```
+
+---
+
+## UC-008 — Approval Lewat Suara
+
+User berkata:
+
+```text
+"Setujui."
+```
+
+Saat ada approval pending.
+
+Expected behavior:
+
+```text
+- NARA mengenali command approval.
+- Jika hanya ada satu approval pending, command disetujui.
+- Jika ada banyak approval pending, NARA bertanya ulang.
+```
+
+Contoh:
+
+```text
+NARA: "Ada dua aksi yang menunggu persetujuan. Yang mana ingin kamu setujui?"
+```
+
+---
+
+# 16. Feature Requirements
+
+# 16.1 NARA Daemon
+
+## Deskripsi
+
+Daemon adalah backend lokal NARA.
+
+Nama binary:
+
+```text
+nara-daemon.exe
+```
+
+Tugas:
+
+```text
+- Menjalankan local server.
+- Mengatur session.
+- Mengatur workspace.
+- Menghubungkan HUD dengan Codex.
+- Menjalankan tools.
+- Mengelola approval.
+- Mengelola voice pipeline.
+- Menyimpan log.
+```
+
+---
+
+## Requirement
+
+Daemon harus bisa:
+
+```text
+- Start otomatis saat HUD dibuka.
+- Berjalan di background.
+- Menyediakan localhost API.
+- Menyediakan WebSocket event stream.
+- Memanggil Codex CLI.
+- Menjalankan command Windows secara aman.
+- Mengirim status real-time ke HUD.
+- Menyimpan event log.
+```
+
+---
+
+# 16.2 NARA HUD
+
+## Deskripsi
+
+HUD adalah UI utama.
+
+Teknologi:
+
+```text
+Tauri + React + TypeScript
+```
+
+HUD harus bisa:
+
+```text
+- Menampilkan chat.
+- Menampilkan status voice.
+- Menampilkan tombol mic.
+- Menampilkan approval.
+- Menampilkan output command.
+- Menampilkan workspace.
+- Menampilkan Codex status.
+- Menampilkan log aktivitas.
+```
+
+---
+
+# 16.3 Text Input
+
+NARA harus mendukung input teks.
+
+Requirement:
+
+```text
+- Text box di HUD.
+- Send button.
+- Enter to send.
+- Shift+Enter untuk newline.
+- History command/prompt.
+```
+
+---
+
+# 16.4 Voice Input
+
+NARA harus mendukung input suara.
+
+MVP minimum:
+
+```text
+- Tombol mic di HUD.
+- Tekan dan bicara.
+- Lepas atau klik stop untuk selesai.
+- Audio ditranskrip ke teks.
+- Transkrip tampil sebelum/ketika dikirim.
+```
+
+Optional:
+
+```text
+- Hotkey untuk mulai mendengar.
+- Auto stop saat user berhenti bicara.
+```
+
+---
+
+# 16.5 Voice Output
+
+NARA harus bisa menjawab dengan suara.
+
+Requirement:
+
+```text
+- Jawaban penting dibacakan.
+- User bisa mute/unmute.
+- User bisa stop speaking.
+- Volume bisa diatur.
+- Voice output bisa dimatikan dari settings.
+```
+
+---
+
+# 16.6 Wake Word
+
+Target:
+
+```text
+"NARA"
+```
+
+Requirement future:
+
+```text
+- Bisa mendeteksi kata "NARA".
+- Tidak langsung mengirim semua audio ke cloud.
+- Wake word diproses lokal jika memungkinkan.
+- Setelah wake word, mulai rekam command.
+```
+
+Status:
+
+```text
+MVP stretch goal
+```
+
+---
+
+# 16.7 Codex Bridge
+
+Codex Bridge adalah modul yang menghubungkan NARA ke Codex.
+
+Requirement:
+
+```text
+- Detect Codex CLI.
+- Check Codex availability.
+- Run Codex prompt in workspace.
+- Stream Codex output.
+- Capture exit code.
+- Capture error.
+- Save transcript.
+```
+
+---
+
+# 16.8 Workspace Manager
+
+Workspace adalah folder project aktif.
+
+Requirement:
+
+```text
+- User bisa memilih workspace.
+- Workspace path disimpan.
+- Semua command default dijalankan di workspace.
+- Akses keluar workspace butuh approval atau diblokir.
+```
+
+---
+
+# 16.9 Tool Runtime
+
+Tool runtime adalah layer untuk aksi Windows.
+
+Tools MVP:
+
+```text
+- list_dir
+- read_file
+- write_file
+- run_command
+- git_status
+- git_diff
+- open_vscode
+- open_file_explorer
+- open_terminal
+```
+
+---
+
+# 16.10 Approval System
+
+Semua aksi berisiko harus butuh approval.
+
+Aksi yang wajib approval:
+
+```text
+- run command
+- write file
+- delete file
+- install package
+- git commit
+- git reset
+- akses luar workspace
+```
+
+Aksi yang diblokir:
+
+```text
+- edit registry
+- hapus System32
+- baca credential
+- format disk
+- disable security tools
+```
+
+---
+
+# 16.11 Event Log
+
+NARA harus menyimpan log.
+
+Lokasi:
+
+```text
+%APPDATA%\NARA\logs\
+```
+
+Format:
+
+```text
+JSONL
+```
+
+Event yang dicatat:
+
+```text
+- app started
+- daemon started
+- voice started
+- voice transcribed
+- prompt sent
+- codex output
+- tool requested
+- approval requested
+- approval approved
+- approval rejected
+- command output
+- error
+```
+
+---
+
+# 17. Functional Requirements Detail
+
+## FR-001 — Start NARA
+
+Saat user membuka NARA:
+
+```text
+- HUD muncul.
+- HUD mengecek daemon.
+- Jika daemon belum jalan, HUD menjalankan daemon.
+- HUD mengecek Codex.
+- HUD mengecek microphone.
+- HUD menampilkan status siap/tidak siap.
+```
+
+---
+
+## FR-002 — Select Workspace
+
+User bisa memilih folder project.
+
+```text
+- Klik "Select Workspace".
+- Pilih folder.
+- HUD mengirim path ke daemon.
+- Daemon validasi path.
+- Workspace disimpan.
+```
+
+---
+
+## FR-003 — Send Text Prompt
+
+User mengetik prompt.
+
+```text
+- Prompt dikirim ke daemon.
+- Daemon membuat session jika belum ada.
+- Daemon meneruskan ke Codex.
+- Output di-stream ke HUD.
+```
+
+---
+
+## FR-004 — Record Voice Prompt
+
+User menekan tombol mic.
+
+```text
+- HUD/daemon mulai rekam audio.
+- User bicara.
+- User berhenti.
+- Audio dikirim ke STT.
+- Transkrip tampil di HUD.
+- Transkrip dikirim sebagai prompt.
+```
+
+---
+
+## FR-005 — Speak Response
+
+Setelah NARA punya jawaban:
+
+```text
+- Jawaban lengkap tampil di HUD.
+- Ringkasan jawaban dibacakan.
+- User bisa klik stop voice.
+```
+
+---
+
+## FR-006 — Run Command with Approval
+
+Ketika command dibutuhkan:
+
+```text
+- Daemon membuat ToolRequest.
+- Policy mengecek risiko.
+- Jika ASK, HUD menampilkan approval.
+- User approve/reject.
+- Jika approve, command dijalankan.
+- Output ditampilkan.
+```
+
+---
+
+## FR-007 — Approval via Voice
+
+Saat approval muncul, user bisa berkata:
+
+```text
+"Setujui"
+"Tolak"
+"Batalkan"
+```
+
+Requirement:
+
+```text
+- Hanya berlaku jika approval sedang pending.
+- Jika tidak ada approval, command suara diabaikan atau dijawab dengan klarifikasi.
+```
+
+---
+
+## FR-008 — Git Diff Review
+
+User meminta review perubahan.
+
+```text
+- Daemon menjalankan git status.
+- Daemon menjalankan git diff.
+- Codex menjelaskan perubahan.
+- HUD menampilkan diff.
+```
+
+---
+
+## FR-009 — Open App
+
+User meminta membuka aplikasi.
+
+Supported MVP:
+
+```text
+- VS Code
+- File Explorer
+- Windows Terminal / PowerShell
+- Default browser
+```
+
+---
+
+# 18. Non-Functional Requirements
+
+## 18.1 Performance
+
+Target:
+
+```text
+HUD startup              < 5 detik
+Daemon startup           < 3 detik
+Voice recording start    < 500 ms
+STT response             tergantung provider
+TTS start                < 2 detik
+Event latency            < 200 ms
+```
+
+---
+
+## 18.2 Reliability
+
+NARA harus:
+
+```text
+- Tidak crash jika Codex belum terinstall.
+- Tidak crash jika mic tidak tersedia.
+- Tidak freeze saat command berjalan lama.
+- Bisa cancel command.
+- Bisa reconnect HUD ke daemon.
+```
+
+---
+
+## 18.3 Security
+
+NARA harus:
+
+```text
+- Localhost only.
+- Tidak expose port ke internet.
+- Tidak menjalankan risky command tanpa approval.
+- Tidak membaca credential.
+- Tidak menulis ke system folder.
+- Menyensor secret di log.
+```
+
+---
+
+## 18.4 Privacy
+
+NARA harus menjelaskan ke user:
+
+```text
+- Voice bisa dikirim ke STT provider jika pakai cloud.
+- Codex akan menerima konteks prompt/project sesuai command.
+- Log disimpan lokal.
+- User bisa menghapus log.
+```
+
+---
+
+# 19. Security Policy
+
+## 19.1 Risk Level
+
+```text
+SAFE
+ASK
+BLOCK
+```
+
+---
+
+## 19.2 Safe Actions
+
+Boleh langsung:
+
+```text
+- list folder di workspace
+- read file di workspace
+- git status
+- git diff
+- show logs
+```
+
+---
+
+## 19.3 Ask Actions
+
+Butuh approval:
+
+```text
+- write file
+- edit file
+- run command
+- install package
+- open external app
+- access outside workspace
+- git commit
+- git checkout
+```
+
+---
+
+## 19.4 Block Actions
+
+Diblokir:
+
+```text
+- delete C:\Windows
+- delete System32
+- edit registry
+- read browser password
+- read Windows Credential Manager
+- disable Defender
+- format disk
+- run unknown downloaded executable
+```
+
+---
+
+# 20. Voice Privacy Policy
+
+## 20.1 Push-to-talk Mode
+
+Default MVP:
+
+```text
+NARA hanya mendengar saat user menekan tombol mic atau hotkey.
+```
+
+---
+
+## 20.2 Wake Word Mode
+
+Saat wake word aktif:
+
+```text
+- Audio diproses lokal untuk deteksi "NARA" jika memungkinkan.
+- Setelah wake word terdeteksi, baru command direkam.
+- User bisa mematikan wake word.
+```
+
+---
+
+## 20.3 Cloud STT
+
+Jika memakai cloud STT:
+
+```text
+- Audio command dikirim ke provider STT.
+- User harus tahu ini dari settings.
+- Ada opsi mematikan voice input.
+```
+
+---
+
+# 21. Data Storage
+
+Lokasi data:
+
+```text
+%APPDATA%\NARA\
+```
+
+Struktur:
+
+```text
+%APPDATA%\NARA\
+├── config.toml
+├── nara.db
+├── logs\
+│   └── events-2026-04-27.jsonl
+├── sessions\
+└── audio_cache\
+```
+
+---
+
+# 22. Database Schema Draft
+
+## 22.1 Workspaces
+
+```sql
+CREATE TABLE workspaces (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  path TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  last_opened_at TEXT
+);
+```
+
+---
+
+## 22.2 Sessions
+
+```sql
+CREATE TABLE sessions (
+  id TEXT PRIMARY KEY,
+  workspace_id TEXT,
+  title TEXT,
+  status TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+```
+
+---
+
+## 22.3 Messages
+
+```sql
+CREATE TABLE messages (
+  id TEXT PRIMARY KEY,
+  session_id TEXT NOT NULL,
+  role TEXT NOT NULL,
+  content TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
+```
+
+---
+
+## 22.4 Voice Events
+
+```sql
+CREATE TABLE voice_events (
+  id TEXT PRIMARY KEY,
+  session_id TEXT,
+  audio_path TEXT,
+  transcript TEXT,
+  stt_provider TEXT,
+  duration_ms INTEGER,
+  created_at TEXT NOT NULL
+);
+```
+
+---
+
+## 22.5 Tool Runs
+
+```sql
+CREATE TABLE tool_runs (
+  id TEXT PRIMARY KEY,
+  session_id TEXT NOT NULL,
+  tool_name TEXT NOT NULL,
+  status TEXT NOT NULL,
+  request_json TEXT NOT NULL,
+  result_json TEXT,
+  started_at TEXT,
+  finished_at TEXT
+);
+```
+
+---
+
+## 22.6 Approvals
+
+```sql
+CREATE TABLE approvals (
+  id TEXT PRIMARY KEY,
+  session_id TEXT NOT NULL,
+  tool_run_id TEXT,
+  status TEXT NOT NULL,
+  risk_level TEXT NOT NULL,
+  reason TEXT,
+  created_at TEXT NOT NULL,
+  decided_at TEXT
+);
+```
+
+---
+
+# 23. API Draft
+
+## 23.1 Status
+
+```http
+GET /api/status
+```
+
+Response:
+
+```json
+{
+  "app": "NARA",
+  "daemon": "running",
+  "platform": "windows_10",
+  "codex": {
+    "available": true,
+    "path": "codex"
+  },
+  "voice": {
+    "mic_available": true,
+    "tts_available": true,
+    "wake_word_enabled": false
+  },
+  "workspace": {
+    "path": "C:\\Users\\User\\Projects\\my-app"
+  }
+}
+```
+
+---
+
+## 23.2 Send Text Prompt
+
+```http
+POST /api/sessions/:id/prompt
+```
+
+Request:
+
+```json
+{
+  "input_type": "text",
+  "message": "Jelaskan project ini"
+}
+```
+
+---
+
+## 23.3 Start Voice Capture
+
+```http
+POST /api/voice/start
+```
+
+---
+
+## 23.4 Stop Voice Capture
+
+```http
+POST /api/voice/stop
+```
+
+Response:
+
+```json
+{
+  "transcript": "cek kenapa npm run dev error"
+}
+```
+
+---
+
+## 23.5 Speak Text
+
+```http
+POST /api/voice/speak
+```
+
+Request:
+
+```json
+{
+  "text": "Baik, aku akan mengecek project aktif."
+}
+```
+
+---
+
+## 23.6 Approval Decision
+
+```http
+POST /api/approvals/:id/decision
+```
+
+Request:
+
+```json
+{
+  "decision": "approved"
+}
+```
+
+---
+
+# 24. WebSocket Events
+
+Endpoint:
+
+```text
+ws://127.0.0.1:44731/events
+```
+
+Event examples:
+
+```json
+{
+  "type": "voice.listening",
+  "data": {}
+}
+```
+
+```json
+{
+  "type": "voice.transcribed",
+  "data": {
+    "text": "cek kenapa npm run dev error"
+  }
+}
+```
+
+```json
+{
+  "type": "approval.requested",
+  "data": {
+    "tool": "run_command",
+    "command": "npm run dev",
+    "risk": "medium"
+  }
+}
+```
+
+```json
+{
+  "type": "nara.speaking",
+  "data": {
+    "text": "Aku menemukan error pada dependency project."
+  }
+}
+```
+
+---
+
+# 25. Tech Stack
+
+## 25.1 Backend
+
+```text
+Language: Rust
+Runtime: Tokio
+HTTP/WebSocket: Axum
+Database: SQLite
+Logging: tracing
+Serialization: Serde
+```
+
+---
+
+## 25.2 Frontend HUD
+
+```text
+Tauri
+React
+TypeScript
+Vite
+Tailwind CSS
+Framer Motion
+```
+
+---
+
+## 25.3 Voice
+
+MVP:
+
+```text
+Microphone capture: Tauri/Rust audio library
+STT: OpenAI Speech-to-Text API
+TTS: Windows built-in TTS
+Wake word: later
+```
+
+Future:
+
+```text
+Wake word: Porcupine / OpenWakeWord
+Better TTS: OpenAI TTS / Azure / ElevenLabs
+```
+
+---
+
+## 25.4 AI / Agent
+
+```text
+OpenAI Codex CLI
+```
+
+---
+
+## 25.5 Windows Integration
+
+```text
+PowerShell
+Win32 process launch
+ShellExecute
+Windows file system APIs
+Future: UI Automation API
+```
+
+---
+
+# 26. Repository Structure
+
+```text
+nara/
+├── apps/
+│   └── nara-hud/
+│       ├── src/
+│       ├── src-tauri/
+│       ├── package.json
+│       └── vite.config.ts
+├── crates/
+│   ├── nara-core/
+│   ├── nara-daemon/
+│   ├── nara-cli/
+│   ├── nara-protocol/
+│   ├── nara-codex/
+│   ├── nara-tools/
+│   ├── nara-policy/
+│   ├── nara-store/
+│   ├── nara-voice/
+│   └── nara-windows/
+├── docs/
+│   ├── PRD.md
+│   ├── ARCHITECTURE.md
+│   ├── SECURITY.md
+│   ├── VOICE.md
+│   ├── WINDOWS_SETUP.md
+│   └── ROADMAP.md
+├── examples/
+│   ├── config.example.toml
+│   └── policy.example.toml
+├── Cargo.toml
+├── README.md
+└── LICENSE
+```
+
+---
+
+# 27. Config Draft
+
+Lokasi:
+
+```text
+%APPDATA%\NARA\config.toml
+```
+
+Contoh:
+
+```toml
+[app]
+name = "NARA"
+theme = "dark"
+hud_opacity = 0.94
+always_on_top = false
+
+[daemon]
+host = "127.0.0.1"
+port = 44731
+
+[codex]
+enabled = true
+executable = "codex"
+default_mode = "cli"
+
+[voice]
+enabled = true
+input_mode = "push_to_talk"
+wake_word_enabled = false
+wake_word = "nara"
+stt_provider = "openai"
+tts_provider = "windows"
+speak_responses = true
+
+[security]
+approval_mode = "strict"
+allow_outside_workspace = false
+redact_secrets = true
+
+[logs]
+enabled = true
+retention_days = 14
+```
+
+---
+
+# 28. MVP Scope
+
+## 28.1 Must Have
+
+```text
+- Windows 10 support
+- NARA HUD
+- NARA daemon
+- Localhost communication
+- Text input
+- Voice input via mic button or hotkey
+- Voice output
+- Codex CLI detection
+- Codex prompt execution
+- Workspace selector
+- Command approval
+- Basic command execution
+- Git status
+- Git diff
+- Event log
+- Settings basic
+```
+
+---
+
+## 28.2 Should Have
+
+```text
+- System tray
+- Open VS Code
+- Open File Explorer
+- Stop speaking button
+- Stop running command button
+- Session history
+- Diff viewer
+```
+
+---
+
+## 28.3 Could Have
+
+```text
+- Wake word "NARA"
+- Transparent HUD
+- Animated orb
+- Voice waveform
+- Open terminal
+- Better TTS voice
+```
+
+---
+
+## 28.4 Won’t Have in MVP
+
+```text
+- Full mouse/keyboard automation
+- Browser control
+- Always-listening stable wake word
+- Multi-agent
+- Local AI model
+- Linux/macOS support
+- Mobile app
+- Cloud sync
+```
+
+---
+
+# 29. Roadmap
+
+## Phase 0 — Technical Prototype
+
+Goal:
+
+```text
+Membuktikan HUD bisa bicara ke daemon dan daemon bisa menjalankan Codex.
+```
+
+Deliverables:
+
+```text
+- Tauri HUD basic
+- Rust daemon basic
+- /status endpoint
+- WebSocket event stream
+- Codex subprocess runner
+```
+
+Done jika:
+
+```text
+User bisa mengetik prompt di HUD dan melihat output Codex.
+```
+
+---
+
+## Phase 1 — Text MVP
+
+Goal:
+
+```text
+NARA bisa dipakai sebagai Codex HUD untuk project lokal.
+```
+
+Deliverables:
+
+```text
+- Workspace selector
+- Text prompt
+- Codex output streaming
+- Session history
+- Basic logs
+- Codex status check
+```
+
+---
+
+## Phase 2 — Voice MVP
+
+Goal:
+
+```text
+NARA bisa menerima perintah suara dan menjawab dengan suara.
+```
+
+Deliverables:
+
+```text
+- Mic button
+- Audio capture
+- Speech-to-text
+- Text-to-speech
+- Voice state indicator
+- Stop speaking
+```
+
+---
+
+## Phase 3 — Safe Tool Runtime
+
+Goal:
+
+```text
+NARA bisa menjalankan command dengan approval.
+```
+
+Deliverables:
+
+```text
+- Tool runtime
+- Policy engine
+- Approval card
+- Command output viewer
+- Git status/diff
+- Open VS Code
+```
+
+---
+
+## Phase 4 — HUD Futuristik
+
+Goal:
+
+```text
+NARA terasa seperti assistant desktop ala Jarvis.
+```
+
+Deliverables:
+
+```text
+- Animated voice orb
+- Timeline visual
+- Transparent window
+- Always-on-top mode
+- Mini HUD
+- Better motion design
+```
+
+---
+
+## Phase 5 — Wake Word
+
+Goal:
+
+```text
+User bisa memanggil NARA dengan kata "NARA".
+```
+
+Deliverables:
+
+```text
+- Wake word engine
+- Wake word calibration
+- Wake word settings
+- False trigger handling
+```
+
+---
+
+## Phase 6 — Windows Operator
+
+Goal:
+
+```text
+NARA bisa membantu operasi komputer secara lebih luas.
+```
+
+Deliverables:
+
+```text
+- Open app
+- Focus window
+- Screenshot
+- UI Automation API
+- Semantic click with approval
+```
+
+---
+
+# 30. Success Metrics
+
+## MVP Success Criteria
+
+MVP dianggap berhasil jika:
+
+```text
+- NARA bisa berjalan di Windows 10.
+- HUD bisa terbuka.
+- Daemon bisa berjalan.
+- User bisa memilih workspace.
+- User bisa mengirim prompt teks ke Codex.
+- User bisa bicara lewat mic dan ditranskrip.
+- NARA bisa menjawab dengan suara.
+- NARA bisa menjalankan command setelah approval.
+- Git diff bisa ditampilkan.
+- Log tersimpan.
+```
+
+---
+
+## Product Metrics
+
+```text
+Time to first prompt success         < 5 menit setelah setup
+Voice transcription success rate     > 85% untuk kalimat sederhana
+Command approval coverage            100% untuk risky command
+Blocked command execution            0 berhasil dieksekusi
+Crash-free sessions                  > 95%
+```
+
+---
+
+# 31. Risiko
+
+## Risiko 1 — Scope Terlalu Besar
+
+Masalah:
+
+```text
+Voice + HUD + Codex + Windows tools + approval terlalu banyak untuk MVP.
+```
+
+Solusi:
+
+```text
+Bagi menjadi phase:
+Text → Voice → Tools → Wake word → Screen control.
+```
+
+---
+
+## Risiko 2 — Wake Word Sulit Stabil
+
+Masalah:
+
+```text
+False trigger atau tidak terdeteksi.
+```
+
+Solusi:
+
+```text
+MVP pakai mic button/hotkey dulu.
+Wake word menjadi phase setelah core stabil.
+```
+
+---
+
+## Risiko 3 — Voice API Butuh Biaya
+
+Masalah:
+
+```text
+STT/TTS cloud bisa menambah biaya.
+```
+
+Solusi:
+
+```text
+Gunakan Windows TTS untuk output.
+STT bisa dibuat configurable.
+```
+
+---
+
+## Risiko 4 — Command Berbahaya
+
+Masalah:
+
+```text
+AI bisa menyarankan command risky.
+```
+
+Solusi:
+
+```text
+Policy engine + approval wajib + blocked list.
+```
+
+---
+
+## Risiko 5 — Codex CLI Integration Tidak Stabil
+
+Masalah:
+
+```text
+Output CLI bisa berubah atau sulit diparse.
+```
+
+Solusi:
+
+```text
+Awal cukup stream raw output.
+Parsing advanced dibuat belakangan.
+```
+
+---
+
+# 32. Open Questions
+
+Hal yang perlu diputuskan nanti:
+
+```text
+1. STT mau pakai OpenAI API atau Windows Speech Recognition?
+2. TTS mau pakai Windows voice atau OpenAI TTS?
+3. Wake word masuk MVP atau v0.3?
+4. HUD awal mau normal window atau langsung transparent overlay?
+5. Codex dipanggil langsung via CLI atau dibuat bridge lebih advanced?
+6. Apakah NARA akan open-source?
+7. Apakah NARA perlu installer dari awal?
+8. Apakah API key OpenAI disimpan di NARA atau cukup mengikuti Codex login?
+9. Apakah voice command approval seperti "setujui" masuk MVP?
+10. Apakah NARA harus support bahasa Indonesia dari awal?
+```
+
+---
+
+# 33. Rekomendasi Keputusan Untuk Versi Awal
+
+Menurutku keputusan paling realistis untuk project kamu:
+
+```text
+Nama:
+NARA
+
+Platform:
+Windows 10 first
+
+MVP input:
+Text + push-to-talk voice
+
+MVP output:
+Text + voice response
+
+Wake word:
+Target v0.3, bukan fitur wajib v0.1
+
+AI:
+OpenAI Codex CLI
+
+STT:
+OpenAI Speech-to-Text API
+
+TTS:
+Windows built-in TTS dulu
+
+HUD:
+Tauri + React
+
+Daemon:
+Rust
+
+Security:
+Strict approval mode
+```
+
+---
+
+# 34. Definition of Done MVP
+
+NARA MVP v0.1 selesai jika:
+
+```text
+1. Bisa dijalankan di Windows 10.
+2. HUD terbuka dengan tampilan basic futuristik.
+3. Daemon lokal berjalan.
+4. HUD terhubung ke daemon.
+5. User bisa pilih folder project.
+6. User bisa mengetik prompt.
+7. Prompt dikirim ke Codex.
+8. Output Codex tampil di HUD.
+9. User bisa tekan tombol mic dan bicara.
+10. Suara user berubah menjadi teks.
+11. Teks dikirim sebagai prompt.
+12. NARA bisa membacakan jawaban.
+13. NARA bisa meminta approval sebelum command.
+14. User bisa approve/reject.
+15. Command output tampil di HUD.
+16. Git status/diff bisa dibaca.
+17. Event log tersimpan.
+18. Settings basic tersedia.
+```
+
+---
+
+# 35. Kesimpulan PRD
+
+**NARA** adalah project AI desktop assistant untuk **Windows 10** yang menggabungkan:
+
+```text
+- HUD futuristik
+- Voice input
+- Voice output
+- OpenAI Codex
+- Local daemon
+- Windows tool runtime
+- Approval system
+- Event logs
+```
+
+Konsep akhirnya:
+
+```text
+Kamu panggil NARA
+NARA mendengar
+NARA memahami
+NARA meminta izin jika perlu
+NARA bekerja
+NARA menjelaskan hasilnya dengan suara
+```
+
+MVP terbaik adalah:
+
+```text
+NARA v0.1:
+Windows 10 + HUD + Codex + text input + push-to-talk voice + voice response + approval system
+```
+
+Wake word `"NARA"` tetap menjadi bagian dari visi produk, tapi lebih aman dijadikan target **v0.3** supaya core system-nya stabil dulu.

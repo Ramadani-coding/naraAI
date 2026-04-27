@@ -1,0 +1,12 @@
+target/
+node_modules/
+dist/
+.vite/
+.tauri/
+*.tsbuildinfo
+*.log
+*.tmp
+.nara-dev/
+.env
+.env.*
+!.env.example

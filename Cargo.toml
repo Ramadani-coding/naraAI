@@ -1,0 +1,37 @@
+[workspace]
+resolver = "2"
+members = [
+  "crates/nara-protocol",
+  "crates/nara-policy",
+  "crates/nara-store",
+  "crates/nara-tools",
+  "crates/nara-codex",
+  "crates/nara-daemon",
+  "crates/nara-core",
+  "crates/nara-cli",
+  "crates/nara-voice",
+  "crates/nara-windows"
+]
+
+[workspace.package]
+edition = "2021"
+license = "MIT"
+authors = ["NARA contributors"]
+repository = "https://example.invalid/nara"
+
+[workspace.dependencies]
+anyhow = "1.0"
+axum = { version = "0.8", features = ["macros", "ws"] }
+chrono = { version = "0.4", features = ["serde"] }
+dirs = "6.0"
+futures-util = "0.3"
+regex = "1.11"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "2.0"
+tokio = { version = "1.48", features = ["fs", "io-util", "macros", "net", "process", "rt-multi-thread", "sync", "time"] }
+toml = "0.9"
+tower-http = { version = "0.6", features = ["cors", "trace"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+uuid = { version = "1.18", features = ["v4", "serde"] }

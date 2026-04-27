@@ -1,0 +1,8 @@
+[package]
+name = "nara-voice"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+nara-protocol = { path = "../nara-protocol" }
